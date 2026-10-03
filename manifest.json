@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "silfayner.fita",
+  "name": "Fita",
+  "version": "0.1.0",
+  "author": "silfayner",
+  "description": "Tape calculator with dates, editable descriptions, subtotals, date sorting, undo/redo and local autosave.",
+  "kinds": [
+    "panel"
+  ],
+  "entryPoints": {
+    "panel": "Plugin.qml"
+  }
+}
