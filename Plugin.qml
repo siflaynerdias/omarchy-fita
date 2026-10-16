@@ -159,7 +159,7 @@ Item {
                     tint: "#b8ccff"
                     onClicked: { root.darkMode = !root.darkMode; root.persist() }
                 }
-                Label { text: "FITA / 01"; color: root.muted; font.letterSpacing: 2 }
+                Label { text: "CALCULATOR / 01"; color: root.muted; font.letterSpacing: 2 }
             }
             GridLayout {
                 columns: 7; columnSpacing: 12; rowSpacing: 12

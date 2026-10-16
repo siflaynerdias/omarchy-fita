@@ -1,6 +1,6 @@
-# Fita
+# Calculator
 
-Calculadora de fita para Linux e Omarchy Quattro, inspirada na organização de calculadoras de papel: **operação · data · valor · descrição · ações**. Botões e colunas em inglês, números alinhados à direita e separadores brasileiros.
+Calculadora para Linux e Omarchy Quattro, inspirada na organização de calculadoras de papel: **operação · data · valor · descrição · ações**. Botões e colunas em inglês, números alinhados à direita e separadores brasileiros.
 
 ![Calculator preview](preview.png)
 

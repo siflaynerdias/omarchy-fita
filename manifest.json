@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "silfayner.fita",
-  "name": "Fita",
-  "version": "0.1.0",
+  "name": "Calculator",
+  "version": "0.1.1",
   "author": "silfayner",
   "description": "Tape calculator with dates, editable descriptions, subtotals, date sorting, undo/redo and local autosave.",
   "kinds": [

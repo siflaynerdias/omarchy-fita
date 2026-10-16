@@ -10,8 +10,8 @@ Repositório planejado: https://github.com/siflaynerdias/omarchy-fita
 
 Metadados:
 
-- Nome: Fita
-- Versão: 0.1.0
+- Nome: Calculator
+- Versão: 0.1.1
 - Categoria: Productivity
 - Tag: Quickshell
 - Tag sugerida: Calculator
