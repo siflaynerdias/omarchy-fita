@@ -14,7 +14,7 @@ Item {
     property color placeholderColor: "#8090a0"
     property color backgroundColor: "transparent"
     property font font: Qt.font({ family: "Liberation Sans", pixelSize: 16 })
-    property enumeration horizontalAlignment: Text.AlignLeft
+    property int horizontalAlignment: Text.AlignLeft
     property alias hovered: mouse.containsMouse
     property int cursorPosition: 0
     property string editText: text
