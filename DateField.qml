@@ -42,7 +42,7 @@ RowLayout {
     ToolButton {
         Layout.minimumWidth: 26; Layout.maximumWidth: 26; Layout.preferredWidth: 26; Layout.preferredHeight: 24
         Accessible.name: "Open calendar"
-        contentItem: Text { text: "▦"; font.pixelSize: 22; color: root.darkMode ? "#a5d7ff" : "#316a95"; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+        contentItem: CalendarIcon { color: root.darkMode ? "#a5d7ff" : "#316a95"; anchors.centerIn: parent }
         onClicked: root.openCalendar()
     }
     Popup {
