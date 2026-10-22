@@ -21,27 +21,23 @@ RowLayout {
         root.edited(Dates.format(date));
         calendar.close(); field.forceActiveFocus();
     }
-    TextField {
+    SafeTextField {
         id: field
         objectName: "dateInput"
         Layout.fillWidth: true; Layout.minimumWidth: 0; Layout.preferredWidth: 118; Layout.preferredHeight: 24
-        leftPadding: 6; topPadding: 0; bottomPadding: 0
         text: root.value
         font.family: "Liberation Sans"; font.pixelSize: 16
         maximumLength: 10
-        selectByMouse: true
         clip: true
+        backgroundColor: field.activeFocus ? root.focusFill : "transparent"
         color: text && !Dates.parse(text) ? (root.darkMode ? "#ff9098" : "#b54b47") : root.ink
         Accessible.name: "Date, day month and year"
-        background: Rectangle { color: field.activeFocus ? root.focusFill : "transparent"; radius: 4 }
-        onTextEdited: root.edited(text)
+        onTextEdited: root.edited(value)
         onEditingFinished: {
-            var normalized = Dates.normalize(text);
-            if (normalized !== text) root.edited(normalized);
+            var normalized = Dates.normalize(editText);
+            if (normalized !== editText) root.edited(normalized);
         }
-        onAccepted: { if (!text || Dates.parse(Dates.normalize(text))) root.accepted() }
-        ToolTip.visible: hovered || (activeFocus && text !== "" && !Dates.parse(text))
-        ToolTip.text: text && !Dates.parse(text) ? "Enter a valid date: DD/MM/YYYY" : "DD/MM/YYYY · also accepts 8 digits"
+        onAccepted: { if (!editText || Dates.parse(Dates.normalize(editText))) root.accepted() }
     }
     ToolButton {
         Layout.minimumWidth: 26; Layout.maximumWidth: 26; Layout.preferredWidth: 26; Layout.preferredHeight: 24

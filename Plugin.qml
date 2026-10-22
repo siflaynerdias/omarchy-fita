@@ -9,6 +9,7 @@ import "DateUtils.js" as Dates
 
 Item {
     id: root
+    readonly property int clipboardLimit: 64 * 1024
     property var shell: null
     property var manifest: null
     readonly property alias contentItem: canvas
@@ -148,11 +149,11 @@ Item {
             anchors.fill: parent; anchors.margins: 26; spacing: 16
             RowLayout {
                 Layout.fillWidth: true
-                TextField {
+                SafeTextField {
                     id: title; text: "CALCULATOR - DATE | VALUE | DESCRIPTION"; Layout.fillWidth: true
                     font.pixelSize: 23; font.bold: true; color: root.ink
-                    background: Item {}
-                    onTextEdited: saveTimer.restart()
+                    maximumLength: 120
+                    onTextEdited: { title.text = value; saveTimer.restart() }
                 }
                 PastelButton {
                     text: root.darkMode ? "☀ Light" : "☾ Dark"
@@ -250,31 +251,30 @@ Item {
                             onEdited: function(value) { root.edit(row.index, "dateText", value) }
                             onAccepted: root.insertBelow(row.index)
                         }
-                        TextField {
+                        SafeTextField {
                             id: amount
-                            Layout.minimumWidth: 166; Layout.maximumWidth: 166; Layout.preferredWidth: 166; Layout.preferredHeight: 24; topPadding: 0; bottomPadding: 0
+                            Layout.minimumWidth: 166; Layout.maximumWidth: 166; Layout.preferredWidth: 166; Layout.preferredHeight: 24
                             text: row.op === "=" ? (root.evaluation.rows[row.index] || {}).text || "0,00" : row.value
+                            maximumLength: 64
                             readOnly: row.op === "=" || row.op === "novo"
-                            horizontalAlignment: TextInput.AlignRight
+                            horizontalAlignment: Text.AlignRight
                             font.family: "Liberation Sans"; font.pixelSize: 20; font.bold: row.op === "="
                             color: row.issue || row.op === "−" ? root.errorColor : row.op === "=" ? root.green : root.ink
                             placeholderText: row.op === "novo" ? "" : "0,00"
-                            background: Rectangle { color: parent.activeFocus ? root.focusFill : "transparent"; radius: 4 }
-                            onTextEdited: root.edit(row.index, "value", text)
+                            onTextEdited: root.edit(row.index, "value", value)
                             onEditingFinished: {
-                                if (!readOnly && text.trim()) {
-                                    try { root.edit(row.index, "value", Engine.format(Engine.parse(text))) } catch (e) {}
+                                if (!readOnly && editText.trim()) {
+                                    try { root.edit(row.index, "value", Engine.format(Engine.parse(editText))) } catch (e) {}
                                 }
                             }
                             onAccepted: root.insertBelow(row.index)
                         }
-                        TextField {
+                        SafeTextField {
                             id: description
                             Component.onCompleted: cursorPosition = 0
                             onActiveFocusChanged: { if (!activeFocus) cursorPosition = 0 }
-                            Layout.minimumWidth: root.descriptionWidth; Layout.maximumWidth: root.descriptionWidth; Layout.preferredWidth: root.descriptionWidth; Layout.preferredHeight: 24; leftPadding: 6; topPadding: 0; bottomPadding: 0; text: row.note; color: root.ink; font.family: "Liberation Sans"; font.pixelSize: 16; clip: true; selectByMouse: true
-                            background: Rectangle { color: parent.activeFocus ? root.focusFill : "transparent"; radius: 4 }
-                            onTextEdited: root.edit(row.index, "note", text)
+                            Layout.minimumWidth: root.descriptionWidth; Layout.maximumWidth: root.descriptionWidth; Layout.preferredWidth: root.descriptionWidth; Layout.preferredHeight: 24; text: row.note; maximumLength: 256; color: root.ink; font.family: "Liberation Sans"; font.pixelSize: 16; clip: true; backgroundColor: parent.activeFocus ? root.focusFill : "transparent"
+                            onTextEdited: root.edit(row.index, "note", value)
                             onAccepted: root.insertBelow(row.index)
                         }
                         ToolButton { text: "×"; Layout.minimumWidth: 28; Layout.maximumWidth: 28; Layout.preferredWidth: 28; Layout.preferredHeight: 24; contentItem: Text { text: "×"; color: "#cf354b"; font.pixelSize: 22; font.bold: true; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter } onClicked: { root.checkpoint(); tape.remove(row.index); root.changed() } ToolTip.text: "Delete row"; ToolTip.visible: hovered }
@@ -291,6 +291,12 @@ Item {
             }
         }
         }
-        TextEdit { id: clipboard; visible: false }
+    }
+
+    function copyBounded(value) {
+        // Four bytes per UTF-8 code point is a conservative bound, keeping
+        // the transfer below clipboardLimit before it reaches Wayland.
+        var bounded = value.slice(0, Math.floor(clipboardLimit / 4));
+        Quickshell.execDetached(["sh", "-c", "printf '%s' \"$1\" | head -c 65536 | wl-copy --type text/plain", "fita-clipboard", bounded]);
     }
 }
